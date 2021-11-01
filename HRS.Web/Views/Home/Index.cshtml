@@ -1,0 +1,152 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Home Page";
+        }
+
+<div class="card card-custom">
+
+    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <div class="card-title">
+            <h1 class="card-label">
+                احصائيات
+            </h1>
+        </div>
+    </div>
+
+
+    <div class="card-body">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="alert alert-info">
+                        <h3>عدد الموظفين</h3>
+                        <h3>@Model.NumberOfEmployees</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="alert alert-info">
+                        <h3>عدد المهام</h3>
+                        <h3>@Model.NumberOfTaasks</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="alert alert-info">
+                        <h3>عدد الأقسام</h3>
+                        <h3>@Model.NumberOfDepartments</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="alert alert-info">
+                        <h3>عدد طلبات الاجازات</h3>
+                        <h3>@Model.NumberOfHolidays</h3>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <hr />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>توزيع المستخدمين بالنسبة لنوع المستخدم</h3>
+                    <canvas id="EmployeeTypeChart" width="400" height="400"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <h3> توزيع طلبات الاجازت بالنسبة للحالة</h3>
+                    <canvas id="HolidayStatusChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <br />
+    <hr />
+</div>
+
+@section Scripts{ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+    <script>
+
+    const EmployeeTypeCanvas = document.getElementById('EmployeeTypeChart').getContext('2d');
+    const HolidayStatusCanvas = document.getElementById('HolidayStatusChart').getContext('2d');
+        var employeeTypeChartLabels = [];
+        var employeeTypeChartValues = [];
+        var employeeTypeChartColores = [];
+
+        var holidayStatusChartLabels = [];
+        var holidayStatusChartValues = [];
+        var holidayStatusChartColores = [];
+
+        $.ajax({
+            url: "/Home/GetEmployeeTypeChartData", success: function (result) {
+                $(result).each(function (index) {
+                    employeeTypeChartLabels.push(result[index].key);
+                    employeeTypeChartValues.push(result[index].value);
+                    employeeTypeChartColores.push(result[index].color);
+                });
+                const EmployeeTypeChart = new Chart(EmployeeTypeCanvas, {
+                    
+                    type: 'pie',
+                    data: {
+                        labels: employeeTypeChartLabels,
+                        datasets: [{
+                            label: '# of Votes',
+                            data: employeeTypeChartValues,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+
+                    }
+                });
+            }
+        });
+
+
+        $.ajax({
+            url: "/Home/GetHolidayStatusChartData", success: function (result) {
+                $(result).each(function (index) {
+                    holidayStatusChartLabels.push(result[index].key);
+                    holidayStatusChartValues.push(result[index].value);
+                    holidayStatusChartColores.push(result[index].color);
+                });
+                const HolidayStatusChart = new Chart(HolidayStatusCanvas, {
+
+                    type: 'pie',
+                    data: {
+                        labels: holidayStatusChartLabels,
+                        datasets: [{
+                            label: '# of Votes',
+                            data: holidayStatusChartValues,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+
+                    }
+                });
+            }
+        });
+    </script>
+ }

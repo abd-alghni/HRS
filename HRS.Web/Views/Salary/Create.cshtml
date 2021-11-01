@@ -1,0 +1,41 @@
+﻿@model CreateSalaryDto
+
+@{
+    ViewData["Title"] = "تعديلات الرواتب";
+    Layout = null;
+}
+
+<form asp-action="Create" class="ajaxForm" tname="#kt_datatable" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="EmployeeId" class="control-label"></label>
+                <select class="form-control" asp-for="EmployeeId" asp-items="@ViewBag.employees">
+                </select>
+                <span asp-validation-for="EmployeeId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="SalaryValue" class="control-label"></label>
+                <input asp-for="SalaryValue" class="form-control" />
+                <span asp-validation-for="SalaryValue" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="تم" class="btn btn-primary" />
+        <a data-dismiss="modal" aria-label="Close" class="btn btn-danger">الغاء</a>
+    </div>
+</form>
+
+
+<script>
+    PageLoadActions();
+</script>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
